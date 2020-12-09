@@ -339,17 +339,11 @@ struct BMP {
         for (uint32_t dx = 0; dx < w; dx++) {
             uint32_t x = x0 + dx;
             for (uint32_t dy = 0; dy < h; dy++) {
-                bool toDraw = true;
                 uint32_t y = y0 + dy;
-                if (channels == 4) {
-                    if (cbmp.data[channels * (dy*w + dx) + 3] == 0) {
-                        toDraw = false;
-                    }
-                }
-                if (toDraw) {
-                    uint8_t B = cbmp.data[channels * (dy*w + dx) + 0];
-                    uint8_t G = cbmp.data[channels * (dy*w + dx) + 1];
-                    uint8_t R = cbmp.data[channels * (dy*w + dx) + 2];
+                uint8_t B = cbmp.data[channels * (dy*w + dx) + 0];
+                uint8_t G = cbmp.data[channels * (dy*w + dx) + 1];
+                uint8_t R = cbmp.data[channels * (dy*w + dx) + 2];
+                if (!(B == 0xFF && G == 0xFF && R == 0xFF)) {
                     set_pixel(x, y, B, G, R, 0xFF);
                 }
             }
@@ -364,7 +358,7 @@ struct BMP {
      * @param y y location of lower left corner of character
      * @return Width of character
      */
-    uint32_t drawString(std::string s, uint32_t x0, uint32_t y0) {
+    void drawString(std::string s, uint32_t x0, uint32_t y0) {
         int x = x0;
         const char* c = s.c_str();
         for (size_t i = 0; i < s.length(); i++) {
